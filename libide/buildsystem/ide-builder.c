@@ -222,6 +222,10 @@ ide_builder_init (IdeBuilder *self)
 {
 }
 
+/**
+ * ide_builder_install_async:
+ * @result: (out) (nullable)
+ */
 void
 ide_builder_install_async (IdeBuilder           *self,
                            IdeBuildResult      **result,
