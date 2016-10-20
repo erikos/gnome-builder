@@ -757,6 +757,23 @@ ide_greeter_perspective_show_genesis_view (IdeGreeterPerspective *self,
   egg_state_machine_set_state (self->state_machine, "genesis");
 }
 
+void
+ide_greeter_perspective_set_genesis_property (IdeGreeterPerspective *self,
+					      const gchar           *genesis_addin_name,
+					      const gchar           *manifest)
+{
+  GtkWidget *addin;
+  GValue val = G_VALUE_INIT;
+
+  g_assert (IDE_IS_GREETER_PERSPECTIVE (self));
+
+  addin = gtk_stack_get_child_by_name (self->genesis_stack, genesis_addin_name);
+  g_value_init (&val, G_TYPE_STRING);
+  g_value_set_string (&val, manifest);
+  g_object_set_property (G_OBJECT (addin), "manifest", &val);
+  g_value_unset (&val);
+}
+
 static void
 genesis_button_clicked (IdeGreeterPerspective *self,
                         GtkButton             *button)

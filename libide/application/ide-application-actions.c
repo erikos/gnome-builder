@@ -307,6 +307,58 @@ ide_application_actions_load_project (GSimpleAction *action,
     }
 }
 
+static void
+ide_application_actions_load_flatpak (GSimpleAction *action,
+                                      GVariant      *args,
+                                      gpointer       user_data)
+{
+  IdeApplication *self = user_data;
+  IdeWorkbench *workbench = NULL;
+  IdePerspective *greeter;
+  g_autofree gchar *manifest = NULL;
+  g_autoptr(GFile) file = NULL;
+  const GList *list;
+
+  g_assert (IDE_IS_APPLICATION (self));
+  g_variant_get (args, "s", &manifest);
+
+  list = gtk_application_get_windows (GTK_APPLICATION (self));
+
+  for (; list != NULL; list = list->next)
+    {
+      GtkWindow *window = list->data;
+
+      if (IDE_IS_WORKBENCH (window))
+        {
+          if (ide_workbench_get_context (IDE_WORKBENCH (window)) == NULL)
+            {
+              workbench = IDE_WORKBENCH (window);
+              break;
+            }
+        }
+    }
+
+  if (workbench == NULL)
+    {
+      workbench = g_object_new (IDE_TYPE_WORKBENCH,
+                                "application", self,
+                                NULL);
+    }
+
+  greeter = ide_workbench_get_perspective_by_name (workbench, "greeter");
+
+  if (greeter)
+    {
+      ide_greeter_perspective_show_genesis_view (IDE_GREETER_PERSPECTIVE (greeter),
+                                                 "IdeFlatpakGenesisAddin");
+      ide_greeter_perspective_set_genesis_property (IDE_GREETER_PERSPECTIVE (greeter),
+                                                    "IdeFlatpakGenesisAddin",
+						    manifest);
+    }
+
+  gtk_window_present (GTK_WINDOW (workbench));
+}
+
 static const GActionEntry IdeApplicationActions[] = {
   { "about",        ide_application_actions_about },
   { "dayhack",      ide_application_actions_dayhack },
@@ -314,6 +366,7 @@ static const GActionEntry IdeApplicationActions[] = {
   { "open-project", ide_application_actions_open_project },
   { "new-project",  ide_application_actions_new_project },
   { "load-project", ide_application_actions_load_project, "s"},
+  { "load-flatpak", ide_application_actions_load_flatpak, "s"},
   { "preferences",  ide_application_actions_preferences },
   { "quit",         ide_application_actions_quit },
   { "shortcuts",    ide_application_actions_shortcuts },

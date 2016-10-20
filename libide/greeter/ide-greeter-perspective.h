@@ -31,6 +31,9 @@ G_DECLARE_FINAL_TYPE (IdeGreeterPerspective, ide_greeter_perspective, IDE, GREET
 
 void ide_greeter_perspective_show_genesis_view (IdeGreeterPerspective *self,
                                                 const gchar *genesis_addin_name);
+void ide_greeter_perspective_set_genesis_property (IdeGreeterPerspective *self,
+						   const gchar *genesis_addin_name,
+						   const gchar *manifest);
 
 G_END_DECLS
 

@@ -20,6 +20,7 @@
 #include <ide.h>
 
 #include "gbp-flatpak-runtime-provider.h"
+#include "ide-flatpak-genesis-addin.h"
 
 void
 peas_register_types (PeasObjectModule *module)
@@ -27,4 +28,7 @@ peas_register_types (PeasObjectModule *module)
   peas_object_module_register_extension_type (module,
                                               IDE_TYPE_RUNTIME_PROVIDER,
                                               GBP_TYPE_FLATPAK_RUNTIME_PROVIDER);
+  peas_object_module_register_extension_type (module,
+                                              IDE_TYPE_GENESIS_ADDIN,
+                                              IDE_TYPE_FLATPAK_GENESIS_ADDIN);
 }
